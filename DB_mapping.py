@@ -116,7 +116,7 @@ for station in res:
             session.add(pomiar)
 
 
-
    
 session.commit()
 
+#gitcheck
