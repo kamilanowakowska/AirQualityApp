@@ -23,8 +23,8 @@ class StacjaPomiarowa(base):
 
     station = Column(Integer, primary_key=True )
     stationName = Column(String)
-    gegrLat = Column(Float)
-    gegrLon = Column(Float)
+    gegrLat = Column(String)
+    gegrLon = Column(String)
     loc_id = Column(Integer)
     addressStreet = Column(String)
     city_name = Column(String)
