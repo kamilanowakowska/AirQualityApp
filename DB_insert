@@ -63,5 +63,13 @@ for station in res:
 
                     session.add(pomiar)
 
+        else:
+            res3 = requests.get("https://api.gios.gov.pl/pjp-api/rest/data/getData/{}".format(sensor['id'])).json()
+            for dana in res3['values']:
+                if dana['date'] not in pomiary_lista:
+                    pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
+
+                    session.add(pomiar)
+
 
 session.commit()

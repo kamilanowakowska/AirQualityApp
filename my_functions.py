@@ -90,26 +90,6 @@ def lokalizator(loc, promien):
 
 ##############################################################################
 
-#wykres z pomiarami dla danej stacji
-
-def diagram(station_id):
-
-    cnx = engine.connect()
-    df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
-    df2 = pd.read_sql_table('pomiary', cnx)
-
-    df = df1.merge(df2, left_on='id', right_on='sensor_id')
-    df = df[df['station_id'] == station_id]
-
-
-    df = df[['key', 'date', 'value']]
-    df['date']= pd.to_datetime(df['date'])
-
-
-    df = pd.pivot_table(df, values='value', index='date', columns='key')
-    df.plot()
-    
-    return plt.show()
 
 #databse update
 
@@ -174,7 +154,13 @@ def db_insert():
                         pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
 
                         session.add(pomiar)
+            else:
+                res3 = requests.get("https://api.gios.gov.pl/pjp-api/rest/data/getData/{}".format(sensor['id'])).json()
+                for dana in res3['values']:
+                    if dana['date'] not in pomiary_lista:
+                        pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
 
+                        session.add(pomiar)
 
     return session.commit()
 
