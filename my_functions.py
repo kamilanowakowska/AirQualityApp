@@ -2,9 +2,6 @@ import pandas as pd
 from DB_mapping import engine
 from geopy.geocoders import Nominatim
 from geopy.distance import distance
-
-import matplotlib.pyplot as plt
-
 from sqlalchemy.orm import sessionmaker
 import requests
 from DB_mapping import engine, StacjaPomiarowa, StanowiskoPomiarowe, Pomiar
@@ -13,58 +10,26 @@ from datetime import date, timedelta
 # połączenie SQLAlchemy 
 cnx = engine.connect()
 
-# wywołanie wyników dla konkretnej stacji pomiarowej
 
-#średnie wartości w rozpatrywanym okresie
-def sensor_results_mean(station_id):
-
-    df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
-    df2 = pd.read_sql_table('pomiary', cnx)
-
-    df = df1.merge(df2, left_on='id', right_on='sensor_id')
-    df = df[df['station_id'] == station_id]
-
-    mean_df = pd.pivot_table(df, values='value', index=None, columns='key', aggfunc='mean')
-    return mean_df
-
-
-
-#najmniejsze wartości w rozpatrywanym okresie
-def sensor_results_min(station_id):
-
-    df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
-    df2 = pd.read_sql_table('pomiary', cnx)
-
-    df = df1.merge(df2, left_on='id', right_on='sensor_id')
-    df = df[df['station_id'] == station_id]
-
-    min_df = pd.pivot_table(df, values='value', index=None, columns='key', aggfunc='min')
-    return min_df
-
-#największe wartości w rozpatrywanym okresie
-def sensor_results_max(station_id):
-
-    df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
-    df2 = pd.read_sql_table('pomiary', cnx)
-
-    df = df1.merge(df2, left_on='id', right_on='sensor_id')
-    df = df[df['station_id'] == station_id]
-
-    max_df = pd.pivot_table(df, values='value', index=None, columns='key', aggfunc='max')
-    return max_df
-
-
-
-###########################################################################
-
-#lokalizowanie wyszukiwania
 def lokalizator(loc, promien):
+    """Znalezienie stacji pomiarowych w zadanym promieniu.
+    
+    Funkcja pobiera z bazy danych listę lokalizacji stacji pomiarowych.
+    Następnie dla każdej stacji przeiczana jest odległość od zadanego punktu. 
+    Jeśli odległość zawiera się w zadanym promieniu to stacja dodawana jest 
+    do finalnej listy.
+    
+    :param loc: Adres wyszukiwania.
+    :type loc: str
+    :param loc: Promień wyszukiwania.
+    :type loc: int
+    :return: Lista stacji w zadanym promieniu od podanej lokalizacji.
+    :rtype: list
+    """
 
     geolocator = Nominatim(user_agent="my_request")
     location = geolocator.geocode(loc)
     location2 = location.latitude, location.longitude
-
-# zwraca listę stacji(gegrLat, gegrLon, stationName) w podanym promieniu[km] od podanej lokalizacji w lokalizatorze
 
     df2 = pd.read_sql_table('stacje_pomiarowe', cnx)
     df2 = df2[['gegrLat','gegrLon','stationName']]
@@ -81,19 +46,21 @@ def lokalizator(loc, promien):
         km = distance(location2, item2)
         if km <= promien:
             bliskie_loc.append(item[2])
-
-   
-  
         
     return bliskie_loc
 
-
-##############################################################################
 
 
 #databse update
 
 def db_insert():
+    """Dodanie nowych rekordów do bazy danych.
+    
+    Funkcja inentyfikuje rekordy, które istnieją już w bazie danych. 
+    Następnie dla każdej tabeli pobierane są nowe rekordy.
+    
+    :return: Zapisanie nowych rekordów w bazie danych.
+    """
 
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -153,14 +120,13 @@ def db_insert():
                     if dana['date'] not in pomiary_lista:
                         pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
 
-                        session.add(pomiar)
-            else:
-                res3 = requests.get("https://api.gios.gov.pl/pjp-api/rest/data/getData/{}".format(sensor['id'])).json()
-                for dana in res3['values']:
-                    if dana['date'] not in pomiary_lista:
-                        pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
 
-                        session.add(pomiar)
+            res3 = requests.get("https://api.gios.gov.pl/pjp-api/rest/data/getData/{}".format(sensor['id'])).json()
+            for dana in res3['values']:
+                if dana['date'] not in pomiary_lista:
+                    pomiar = Pomiar(sensor['id'], res3['key'], dana['date'], dana['value'])
+
+                    session.add(pomiar)
 
     return session.commit()
 

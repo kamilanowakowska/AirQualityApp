@@ -8,9 +8,6 @@ from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from tkcalendar import DateEntry
 
-
-
-
   
 # Creating tkinter window and set dimensions
 window = tk.Tk() 
@@ -30,11 +27,33 @@ dates1 = []
 dates2 = []
 
 def cal1_func(event):
+    """Definiowanie akcji po zmianie daty początkowej.
+    
+    Funkcja czyści listę, do której dodawana jest data z widgetu.
+    Data wpisana przez użytkownika jest pobierana i dodawana do listy,
+    która stanowi wejście do funkcji diagram(), sensor_results_mean(),
+    sensor_results_min() oraz sensor_results_max()
+     
+    :param event: Data początkowa.
+    :type number: str
+    """
+
     dates1.clear()
     start_date = event.widget.get()
     dates1.append(start_date)
 
 def cal2_func(event):
+    """Definiowanie akcji po zmianie daty końcowej.
+    
+    Funkcja czyści listę, do której dodawana jest data z widgetu.
+    Data wpisana przez użytkownika jest pobierana i dodawana do listy,
+    która stanowi wejście do funkcji diagram(), sensor_results_mean(),
+    sensor_results_min() oraz sensor_results_max()
+     
+    :param event: Data końcowa.
+    :type number: str
+    """
+
     dates2.clear()
     end_date = event.widget.get()
     dates2.append(end_date)
@@ -42,6 +61,22 @@ def cal2_func(event):
 
 
 def diagram(station_id, start, end):
+    """Wyświetlanie wykresu z danymi pomiarowymi dla danej 
+    stacji pomiarowej o zadanym zakresie dat.
+    
+    Funkcja łączy się z bazą danych i pobiera wartości pomiarów dla 
+    danej stacji pomiarowej oraz filtruje zakres dat. Następnie z 
+    pobranych danych tworozny i wyświetlany jest wykres.
+
+    :param station_id: Id stacji pomiarowej.
+    :type number: int
+    :param start: Data początkowa.
+    :type start: str
+    :param end: Data końcowa.
+    :type end: str
+    :return: Wykres z danymi pomiarowymi.
+    :rtype: plot
+    """
 
     cnx = engine.connect()
     df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
@@ -66,6 +101,21 @@ def diagram(station_id, start, end):
 
 #średnie wartości w rozpatrywanym okresie
 def sensor_results_mean(station_id, start, end):
+    """ Obliczenie średniej wartości parametrów dla danej stacji pomiarowej.
+    
+    Funkcja łączy się z bazą dancyhi pobiera listę pomiarów dladanej stacji pomiarowej.
+    Następnie nakładany jest filtr z zadanymi datami oraz obliczana wartość średnia dla każdego 
+    parametru. Ramka danych wyświetlana jest na widgecie.
+    
+    :param station_id: Id stacji pomiarowej.
+    :type number: int
+    :param start: Data początkowa.
+    :type start: str
+    :param end: Data końcowa.
+    :type end: str
+    :return: Wyświetlenie ramki danych na widgecie.
+    :rtype: dataframe
+    """
 
     df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
     df2 = pd.read_sql_table('pomiary', cnx)
@@ -89,6 +139,21 @@ def sensor_results_mean(station_id, start, end):
 
 #najmniejsze wartości w rozpatrywanym okresie
 def sensor_results_min(station_id, start, end):
+    """ Obliczenie najmniejszej wartości parametrów dla danej stacji pomiarowej.
+    
+    Funkcja łączy się z bazą dancyhi pobiera listę pomiarów dladanej stacji pomiarowej.
+    Następnie nakładany jest filtr z zadanymi datami oraz obliczana wartość najmniejsza dla każdego 
+    parametru. Ramka danych wyświetlana jest na widgecie.
+    
+    :param station_id: Id stacji pomiarowej.
+    :type number: int
+    :param start: Data początkowa.
+    :type start: str
+    :param end: Data końcowa.
+    :type end: str
+    :return: Wyświetlenie ramki danych na widgecie.
+    :rtype: dataframe
+    """
 
     df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
     df2 = pd.read_sql_table('pomiary', cnx)
@@ -112,6 +177,21 @@ def sensor_results_min(station_id, start, end):
 
 #największe wartości w rozpatrywanym okresie
 def sensor_results_max(station_id, start, end):
+    """ Obliczenie największej wartości parametrów dla danej stacji pomiarowej.
+    
+    Funkcja łączy się z bazą dancyhi pobiera listę pomiarów dladanej stacji pomiarowej.
+    Następnie nakładany jest filtr z zadanymi datami oraz obliczana wartość największa dla każdego 
+    parametru. Ramka danych wyświetlana jest na widgecie.
+    
+    :param station_id: Id stacji pomiarowej.
+    :type number: int
+    :param start: Data początkowa.
+    :type start: str
+    :param end: Data końcowa.
+    :type end: str
+    :return: Wyświetlenie ramki danych na widgecie.
+    :rtype: dataframe
+    """
 
     df1 = pd.read_sql_table('stanowiska_pomiarowe', cnx)
     df2 = pd.read_sql_table('pomiary', cnx)
@@ -129,9 +209,20 @@ def sensor_results_max(station_id, start, end):
 
     txt_max.delete("1.0", "end") 
     txt_max.insert(tk.END,"\n" + "\t" + "Największe wartości:" + "\n" + "\n")
-    return txt_max.insert(END, max_df)
+    return txt_max.insert(END, max_df)  
 
 def callbackFunc(event):
+    """Definiowanie akcji po wybraniu lokalizacji stacji pomiarowej.
+    
+    Funkcja pobiera nazwę wybranej stacji, łączy się z bazą danych
+    i znajduje id wybranej stacji pomiarowej. Następnie wywoływane 
+    są funkcje sensor_results_mean(), sensor_results_min(),
+    sensor_results_max() oraz diagram().
+     
+    :param event: Nazwa stacji pomiarowej.
+    :type number: str
+    """
+
     chosen_station = event.widget.get() #pobierz dane z przycisku wybierz
     cnx = engine.connect()
     df0 = pd.read_sql_table('stacje_pomiarowe', cnx)
@@ -188,9 +279,15 @@ txt_output.grid(column=0, row = 11, sticky = W, pady = 2, rowspan = 4)
 
 
 def clicked():   
+    """Wyświetlanie stacji pomiarowym w zadanym probieniu od wybranej lokalizacji.
+    
+    Funkcja czyści widget wyświetlający listę stacji pomiarowych oraz pobiera wpisany adres i promień.
+    Następnie przy uzyciu funkcji lokalizator() wyszukiwane sa stacje w okolicy. 
+    Znalezione stacje zostaja wyświetlone na widgecie. W przypadku braku możliwości pobrania danych 
+    wyświetlany jest komunikat."""
     try:  
-        txt_output.delete("1.0", "end")         # definiuje funkcję
-        address = place.get()   # to co pwisaliśmy imie tu się wyświetla
+        txt_output.delete("1.0", "end")        
+        address = place.get()  
         km2 = int(km.get())
         locations = lokalizator(address, km2)
         for item in locations:
@@ -220,8 +317,14 @@ cal2.bind("<<DateEntrySelected>>", cal2_func)
 #odświeżanie danych
 
 def refresh(): 
+    """Pobranie nowych danych pomiarowych do bazy danych.
+    
+    Funkcja wywołuje funkcję db_insert(). Po poprawnym zapisie danych
+    do bazy wyświetla się komunikat. W przypadku niepowodzenia zostaje
+    wyświetlony odpowiedni komunikat."""
     try:
-        return db_insert()
+        db_insert()
+        tk.messagebox.showinfo(title="Info", message="Dane zostały pobrane pomyślnie")
     except:
         tk.messagebox.showerror(title="Błąd pobierania danych", message="Aktualnie pobranie danych nie jest możliwe. Skorzystaj z danych historycznych.")
 
@@ -243,5 +346,7 @@ txt_min.insert(tk.END, "\n" + "\t" + "Najmniejsze wartości:" + "\n" + "\n")
 txt_max = Text(window, height=8, width=80)
 txt_max.grid(column=8, row = 13, sticky = W, pady = 2)
 txt_max.insert(tk.END, "\n" + "\t" + "Największe wartości:" + "\n" + "\n")
+
+
 
 window.mainloop()
