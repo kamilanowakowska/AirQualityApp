@@ -16,7 +16,7 @@ Instrukcja obsługi aplikacji:
 ![image](https://github.com/kamilanowakowska/KAMILA/assets/91428741/b399cb5b-8194-489f-91b1-c3d5b41a8403)
 
 
-3. Aby wyszukać stacje w Twojej okolicy uzupełnij adres i oczekiwaną odległość jak na przykładzie. Następnie kliknij "Wyszukaj":
+3. Aby wyszukać stacje w Twojej okolicy uzupełnij adres i oczekiwaną odległość jak na przykładzie. Następnie kliknij "Szukaj":
 
 ![image](https://github.com/kamilanowakowska/KAMILA/assets/91428741/f3926f77-5025-486e-96d9-7ae0b232c907)
 
