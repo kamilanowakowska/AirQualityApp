@@ -8,11 +8,44 @@ from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from tkcalendar import DateEntry
 
+"""Ten moduł stanowi model aplikacji."""
   
 # Creating tkinter window and set dimensions
 window = tk.Tk() 
 window.title('AirQualityApp') 
 window.geometry('1800x1250')
+
+Grid.columnconfigure(window,0,weight =1)
+Grid.columnconfigure(window,1,weight =1)
+Grid.columnconfigure(window,2,weight =1)
+Grid.columnconfigure(window,3,weight =1)
+Grid.columnconfigure(window,4,weight =1)
+Grid.columnconfigure(window,5,weight =1)
+Grid.columnconfigure(window,6,weight =1)
+Grid.columnconfigure(window,7,weight =1)
+Grid.columnconfigure(window,8,weight =1)
+Grid.columnconfigure(window,9,weight =1)
+Grid.columnconfigure(window,10,weight =1)
+Grid.columnconfigure(window,11,weight =1)
+Grid.columnconfigure(window,12,weight =1)
+Grid.columnconfigure(window,13,weight =1)
+
+
+Grid.rowconfigure(window,0,weight =1)
+Grid.rowconfigure(window,1,weight =1)
+Grid.rowconfigure(window,2,weight =1)
+Grid.rowconfigure(window,3,weight =1)
+Grid.rowconfigure(window,4,weight =1)
+Grid.rowconfigure(window,5,weight =1)
+Grid.rowconfigure(window,6,weight =1)
+Grid.rowconfigure(window,7,weight =1)
+Grid.rowconfigure(window,8,weight =1)
+Grid.rowconfigure(window,9,weight =1)
+Grid.rowconfigure(window,10,weight =1)
+Grid.rowconfigure(window,11,weight =1)
+Grid.rowconfigure(window,12,weight =1)
+Grid.rowconfigure(window,13,weight =1)
+
 
 bg = PhotoImage(file = "airquality.png")
 label1 = Label( window, image = bg)
@@ -222,19 +255,21 @@ def callbackFunc(event):
     :param event: Nazwa stacji pomiarowej.
     :type number: str
     """
-
-    chosen_station = event.widget.get() #pobierz dane z przycisku wybierz
-    cnx = engine.connect()
-    df0 = pd.read_sql_table('stacje_pomiarowe', cnx)
-    df2 = df0[['station', 'stationName']]
-    df2 = df2[df2['stationName'] == chosen_station]
-    station_id = df2['station'].unique() #zamień nazwę stacji na id
-    station_id = station_id[0]
-    
-    sensor_results_mean(station_id, dates1[0], dates2[0])
-    sensor_results_min(station_id, dates1[0], dates2[0])
-    sensor_results_max(station_id, dates1[0], dates2[0])
-    diagram(station_id, dates1[0], dates2[0])
+    try:
+        chosen_station = event.widget.get() #pobierz dane z przycisku wybierz
+        cnx = engine.connect()
+        df0 = pd.read_sql_table('stacje_pomiarowe', cnx)
+        df2 = df0[['station', 'stationName']]
+        df2 = df2[df2['stationName'] == chosen_station]
+        station_id = df2['station'].unique() #zamień nazwę stacji na id
+        station_id = station_id[0]
+        
+        sensor_results_mean(station_id, dates1[0], dates2[0])
+        sensor_results_min(station_id, dates1[0], dates2[0])
+        sensor_results_max(station_id, dates1[0], dates2[0])
+        diagram(station_id, dates1[0], dates2[0])
+    except:
+        tk.messagebox.showerror(title="Nie wybrałeś przedziału czasowego", message="Aby wyświetlić dane, najpierw wybierz przedział czasowy.")
     
    
 
@@ -350,3 +385,4 @@ txt_max.insert(tk.END, "\n" + "\t" + "Największe wartości:" + "\n" + "\n")
 
 
 window.mainloop()
+   

@@ -6,6 +6,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 
+"""Ten moduł odpowiada za tworzenie bazy danych."""
+
 # inicjalizacja połaczenia z bazą danych 
 
 engine = create_engine('sqlite:///powietrze.db', echo=True)

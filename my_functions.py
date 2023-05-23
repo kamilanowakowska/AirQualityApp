@@ -7,6 +7,10 @@ import requests
 from DB_mapping import engine, StacjaPomiarowa, StanowiskoPomiarowe, Pomiar
 from datetime import date, timedelta
 
+"""Ten moduł zawiera funkcje pomocnicze do aplikacji. Są nimi:
+    1. Funkcja ustalajaca najbliższe stacje pomiarowe
+    2. Funkcja dodająca dane do bazy."""
+
 # połączenie SQLAlchemy 
 cnx = engine.connect()
 
