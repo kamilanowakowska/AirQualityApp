@@ -15,36 +15,22 @@ window = tk.Tk()
 window.title('AirQualityApp') 
 window.geometry('1800x1250')
 
-Grid.columnconfigure(window,0,weight =1)
-Grid.columnconfigure(window,1,weight =1)
+
+Grid.columnconfigure(window,0,weight =2)
+Grid.columnconfigure(window,1,weight =2)
 Grid.columnconfigure(window,2,weight =1)
 Grid.columnconfigure(window,3,weight =1)
 Grid.columnconfigure(window,4,weight =1)
-Grid.columnconfigure(window,5,weight =1)
-Grid.columnconfigure(window,6,weight =1)
-Grid.columnconfigure(window,7,weight =1)
-Grid.columnconfigure(window,8,weight =1)
-Grid.columnconfigure(window,9,weight =1)
-Grid.columnconfigure(window,10,weight =1)
-Grid.columnconfigure(window,11,weight =1)
-Grid.columnconfigure(window,12,weight =1)
-Grid.columnconfigure(window,13,weight =1)
+Grid.columnconfigure(window,5,weight =5)
 
 
 Grid.rowconfigure(window,0,weight =1)
 Grid.rowconfigure(window,1,weight =1)
 Grid.rowconfigure(window,2,weight =1)
-Grid.rowconfigure(window,3,weight =1)
-Grid.rowconfigure(window,4,weight =1)
-Grid.rowconfigure(window,5,weight =1)
-Grid.rowconfigure(window,6,weight =1)
-Grid.rowconfigure(window,7,weight =1)
-Grid.rowconfigure(window,8,weight =1)
-Grid.rowconfigure(window,9,weight =1)
-Grid.rowconfigure(window,10,weight =1)
-Grid.rowconfigure(window,11,weight =1)
-Grid.rowconfigure(window,12,weight =1)
-Grid.rowconfigure(window,13,weight =1)
+Grid.rowconfigure(window,3,weight =25)
+Grid.rowconfigure(window,4,weight =25)
+Grid.rowconfigure(window,5,weight =25)
+
 
 
 bg = PhotoImage(file = "airquality.png")
@@ -276,8 +262,8 @@ def callbackFunc(event):
      
 
 # Set label 
-ttk.Label(window, text = "Wybierz stację pomiarową").grid(column = 1, 
-          row = 8, sticky = W, pady = 2)
+ttk.Label(window, text = "Wybierz stację pomiarową").grid(column = 0, 
+          row = 2, sticky = E, pady = 2)
 
   
 # Create Combobox
@@ -289,7 +275,7 @@ select_station = ttk.Combobox(window, width = 27, textvariable = n)
 # Adding combobox drop down list 
 select_station['values'] = loc_listdf1
   
-select_station.grid(column = 2, row = 8, sticky = W, pady = 10, columnspan = 2, padx = 5) 
+select_station.grid(column = 2, row = 2, sticky = W, pady = 10, columnspan = 2, padx = 5) 
 select_station.current()
 select_station.bind("<<ComboboxSelected>>", callbackFunc)
 
@@ -297,19 +283,19 @@ select_station.bind("<<ComboboxSelected>>", callbackFunc)
 # search for the nearest
 
 search_label = Label(window, text="Znajdź najbliższe stacje")   # wprowadza napis do okna
-search_label.grid(column=1, row=3, sticky = W, pady = 30)    # zdefiniowanie gdzie ten napis ma sie znajdować
+search_label.grid(column=0, row=0, sticky = E, pady = 30)    # zdefiniowanie gdzie ten napis ma sie znajdować
 
 place = Entry(window,width=50)   # wycięcie do wpisania swojego imienia
-place.grid(column=2, row=3, sticky = W, pady = 2, columnspan=2)    # zdefiniowanie gdzie te wcięcie ma się znajdować
+place.grid(column=2, row=0, sticky = W, pady = 2, columnspan=2)    # zdefiniowanie gdzie te wcięcie ma się znajdować
 
 km_label = Label(window, text="+km", width=10)   # wprowadza napis do okna
-km_label.grid(column=3, row=3, sticky = E, pady = 2)    # zdefiniowanie gdzie ten napis ma sie znajdować
+km_label.grid(column=3, row=0, sticky = E, pady = 2)    # zdefiniowanie gdzie ten napis ma sie znajdować
 
 km = Entry(window,width=10)   # wycięcie do wpisania swojego imienia
-km.grid(column=4, row=3, sticky = W, pady = 2)    # zdefiniowanie gdzie te wcięcie ma się znajdować
+km.grid(column=4, row=0, sticky = W, pady = 2)    # zdefiniowanie gdzie te wcięcie ma się znajdować
 
 txt_output = Text(window, height=50, width=50)
-txt_output.grid(column=0, row = 11, sticky = W, pady = 2, rowspan = 4)
+txt_output.grid(column=0, row = 3, sticky = W, pady = 2, rowspan = 4)
 
 
 
@@ -332,20 +318,20 @@ def clicked():
 
 przycisk = Button(window, text="Szukaj", command=clicked)
 # naciśnij przycisk a uruchomi się funkcja
-przycisk.grid(column=7, row=3, padx = 10) # położenie przycisku
+przycisk.grid(column=5, row=0,sticky = W, padx = 10) # położenie przycisku
 
 #time pickers
 
-cal_label = Label(window, text="Wybierz datę początkową i końcową")   # wprowadza napis do okna
-cal_label.grid(column=1, row=5, sticky = W, pady = 30)    # zdefiniowanie gdzie ten napis ma sie znajdować
+cal_label = Label(window, text="Wybierz zakres dat:")   # wprowadza napis do okna
+cal_label.grid(column=0, row=1, sticky = E, pady = 30)    # zdefiniowanie gdzie ten napis ma sie znajdować
 
 cal1=DateEntry(window,selectmode='day')
-cal1.grid(row=5,column=2,padx=15)
+cal1.grid(row=1,column=2,padx=15)
 cal1.delete(0, "end")
 cal1.bind("<<DateEntrySelected>>", cal1_func)
 
 cal2=DateEntry(window,selectmode='day')
-cal2.grid(row=5,column=3,padx=15)
+cal2.grid(row=1,column=3,padx=15)
 cal2.delete(0, "end")
 cal2.bind("<<DateEntrySelected>>", cal2_func)
 
@@ -367,19 +353,19 @@ def refresh():
 
 refresh_click = Button(window, text="Odśwież dane", command=refresh)
 # naciśnij przycisk a uruchomi się funkcja
-refresh_click.grid(column=9, row=3, padx=20) # położenie przycisku
+refresh_click.grid(column=5, row=0, sticky=E, padx=20) # położenie przycisku
 
 #statistics textboxes
 txt_mean = Text(window, height=8, width=80)
-txt_mean.grid(column=8, row = 11, sticky = W, pady = 2)
+txt_mean.grid(column=5, row = 3, sticky = W, pady = 2)
 txt_mean.insert(tk.END,"\n" + "\t" + "Średnie wartości:" + "\n" + "\n")
 
 txt_min = Text(window, height=8, width=80)
-txt_min.grid(column=8, row = 12, sticky = W, pady = 2)
+txt_min.grid(column=5, row = 4, sticky = W, pady = 2)
 txt_min.insert(tk.END, "\n" + "\t" + "Najmniejsze wartości:" + "\n" + "\n")
 
 txt_max = Text(window, height=8, width=80)
-txt_max.grid(column=8, row = 13, sticky = W, pady = 2)
+txt_max.grid(column=5, row = 5, sticky = W, pady = 2)
 txt_max.insert(tk.END, "\n" + "\t" + "Największe wartości:" + "\n" + "\n")
 
 
